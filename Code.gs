@@ -16,10 +16,7 @@ function get(name) {
       var name = file.getName().replace(".json", "");
       var blob = file.getBlob();
       var content = blob.getDataAsString();
-      var today = new Date();
-      var date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
-      var time = today.getHours()+':'+today.getMinutes()+':'+today.getSeconds();
-      logger.add("\nFrom " + file.getName() + " processed @ " + date + ' ' + time);
+      logger.add("\nFrom " + file.getName() + " processed @ " + timestamp());
       var filters = processFilters_(content, logger);
       for (var i in filters) {
         var filter = filters[i];
@@ -33,7 +30,7 @@ function get(name) {
     var logFile = dir.getName() + ".log";
     files = dir.getFilesByName(logFile);
     if (files.hasNext()) {
-      dir.removeFile(files.next());
+      files.next().setTrashed(true);
     }
     dir.createFile(logFile, logger.log + "\n\nFull Set\n" + stringify(result, 4));
   }
@@ -51,19 +48,20 @@ function get(name) {
  */
 function processFilters_(content, logger) {
   var filters = JSON.parse(content);
+  var meta = MetaData.data();
   for(var i in filters) {
-    info = filters[i];
+    var info = filters[i];
     if ("patterns" in info) {
       patterns = info["patterns"];
       for(type in patterns) {
         var pattern = patterns[type];
         if (typeof pattern === 'string') {
-          patterns[type] = new RegExp(MetaData.expand(pattern));
+          patterns[type] = new RegExp(MetaData.expandWithData(pattern, meta));
         } else if (Array.isArray(pattern)) {
           if (pattern.length == 1) {
-            patterns[type] = new RegExp(MetaData.expand(pattern[0]));
+            patterns[type] = new RegExp(MetaData.expandWithData(pattern[0], meta));
           } else if (pattern.length == 2) {
-            patterns[type] = new RegExp(MetaData.expand(pattern[0]), pattern[1]);
+            patterns[type] = new RegExp(MetaData.expandWithData(pattern[0], meta), pattern[1]);
           }
         }
       }

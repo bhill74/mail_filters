@@ -1,0 +1,16 @@
+{
+  "timeZone": "America/New_York",
+  "dependencies": {
+    "libraries": [{
+      "userSymbol": "MyLogger",
+      "libraryId": "1kMCuYtyKJ0YobwXsNd7vteej0qPiAV3GHNW89IFwwBpO2hxNPl_v25xe",
+      "version": "4"
+    }, {
+      "userSymbol": "MetaData",
+      "libraryId": "1KlXZO-n4JTv-sdz9SqBw-Nq8LQL9GT_kAQBC4Dq3vz_frfH6i5EX3tqe",
+      "version": "2"
+    }]
+  },
+  "exceptionLogging": "STACKDRIVER",
+  "runtimeVersion": "V8"
+}
